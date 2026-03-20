@@ -1,8 +1,6 @@
 import axios from "axios";
-import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-
 function App() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -13,14 +11,14 @@ function App() {
     getData();
   }, []);
 
-  console.log(users);
+ const API_USER = import.meta.env.VITE_API_USER;
 
-  const getData = async (e) => {
-    // e.preventDefault();
+  const getData = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/api/user");
+      const res = await axios.get(API_USER);
       setUsers(res.data);
     } catch (error) {
+      alert("User Not Found")
       console.error(error);
     }
   };
@@ -29,7 +27,7 @@ function App() {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:3000/api/user", {
+      await axios.post(API_USER, {
         name,
         email,
         password,
@@ -41,6 +39,7 @@ function App() {
 
       getData();
     } catch (error) {
+      alert("User Not Create")
       console.error(error);
     }
   };
@@ -54,6 +53,7 @@ function App() {
             <label className="block mb-1 font-medium">Name</label>
             <input
               onChange={(e) => setName(e.target.value)}
+              value={name}
               type="text"
               placeholder="Enter Your Name"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -64,6 +64,7 @@ function App() {
             <label className="block mb-1 font-medium">Email</label>
             <input
               onChange={(e) => setEmail(e.target.value)}
+              value={email}
               type="email"
               placeholder="Enter Your Email"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -74,6 +75,7 @@ function App() {
             <label className="block mb-1 font-medium">Password</label>
             <input
               onChange={(e) => setPassword(e.target.value)}
+              value={password}
               type="password"
               placeholder="Enter Your Password"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -86,10 +88,10 @@ function App() {
         </form>
 
         <ul className="mt-6 space-y-4">
-          {users.map((value, index) => {
+          {users.map((value) => {
             return (
               <li
-                key={index}
+                key={value._id}
                 className="bg-white p-4 rounded-xl shadow-md border hover:shadow-lg transition"
               >
                 <h1 className="text-lg font-semibold text-gray-800">

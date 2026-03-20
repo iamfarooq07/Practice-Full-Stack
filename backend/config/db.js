@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv"
 
-const MONGODB_URI = "mongodb://127.0.0.1:27017/user";
+dotenv.config()
+
+// const MONGODB_URI = "mongodb://127.0.0.1:27017/user";
+const MONGODB_URI = process.env.MONGODB_URI;
 
 export async function connectDatabase() {
   
@@ -9,5 +13,6 @@ export async function connectDatabase() {
     console.log("Successfully connected to MongoDB.");
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
+    process.exit(1)
   }
 }

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import userController from "../controller/userController.js";
+import { registerMiddleware } from "../Middleware/middleware.js";
 
 export const route = Router();
 
@@ -7,7 +8,8 @@ route.get("/user", userController.getData);
 
 route.get("/user/:id", userController.getDataById);
 
-route.post("/user", userController.postData);
+// registerMiddleware pehle chalega, phir postData
+route.post("/user", registerMiddleware, userController.postData);
 
 route.put("/user/:id", userController.putData);
 

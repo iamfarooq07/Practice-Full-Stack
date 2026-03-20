@@ -38,6 +38,11 @@ const putData = async (req, res) => {
             new: true,
             runValidators: true
         });
+
+        if(!user){
+            return res.status(404).json({message : "User Not Found"})
+        }
+
         res.status(200).json(user);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -47,7 +52,12 @@ const putData = async (req, res) => {
 // 5. DELETE
 const deleteData = async (req, res) => {
     try {
-        await User.findByIdAndDelete(req.params.id);
+        const user = await User.findByIdAndDelete(req.params.id);
+        
+        if(!user){
+            return res.status(404).json({message : "User Not Found"})
+        }
+
         res.status(200).json({ message: "Deleted Successfully" });
     } catch (error) {
         res.status(500).json({ error: error.message });
