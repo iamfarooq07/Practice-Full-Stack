@@ -1,16 +1,8 @@
 import { Router } from "express";
 import userController from "../controller/userController.js";
-import { registerMiddleware } from "../Middleware/middleware.js";
+import { registerMiddleware, loginMiddleware } from "../Middleware/middleware.js";
 
 export const route = Router();
 
-route.get("/user", userController.getData);
-
-route.get("/user/:id", userController.getDataById);
-
-// registerMiddleware pehle chalega, phir postData
-route.post("/user", registerMiddleware, userController.postData);
-
-route.put("/user/:id", userController.putData);
-
-route.delete("/user/:id", userController.deleteData);
+route.post("/auth/register", registerMiddleware, userController.postData);
+route.post("/auth/login", loginMiddleware);

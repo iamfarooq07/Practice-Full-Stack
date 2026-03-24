@@ -21,11 +21,11 @@ const getDataById = async (req, res) => {
     }
 };
 
-// 3. POST (Yahan error aa raha tha)
+// 3. POST - Register
 const postData = async (req, res) => {
     try {
         const user = await User.create(req.body);
-        res.status(201).json(user);
+        res.status(201).json({ id: user._id, name: user.name, email: user.email });
     } catch (error) {
         res.status(400).json({ message: "Validation Failed", details: error.message });
     }

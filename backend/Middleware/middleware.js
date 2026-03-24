@@ -6,9 +6,7 @@ export const registerMiddleware = async (req, res, next) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
-
         if (user) return res.status(400).json({ message: "Email already exists" });
-
         req.body.password = await bcrypt.hash(password, 10);
         next();
     } catch (error) {
@@ -16,33 +14,38 @@ export const registerMiddleware = async (req, res, next) => {
     }
 };
 
-export const loginMiddleware = async (req, res) => { // Next ki zaroorat nahi agar response yahin se bhej rahe hain
+export const loginMiddleware = async (req, res) => {
     try {
         const { email, password } = req.body;
-
         const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(400).json({ message: "User nahi mila, pehle register karein" });
-        }
+        if (!user) return res.status(400).json({ message: "User not found, please register first" });
 
         const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ message: "Ghalat password!" });
-        }
+        if (!isMatch) return res.status(400).json({ message: "Incorrect password" });
 
-        const token = jwt.sign(
-            { id: user._id },
-            process.env.JWT_SECRET,
-            { expiresIn: "7d" }
-        );
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
         return res.status(200).json({
             message: "Login successful",
             token,
-            user: { id: user._id, email: user.email }
+            user: { id: user._id, name: user.name, email: user.email }
         });
-
     } catch (error) {
         res.status(500).json({ message: "Login Error", error: error.message });
+    }
+};
+
+export const authMiddleware = (req, res, next) => {
+    try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader || !authHeader.startsWith("Bearer "))
+            return res.status(401).json({ message: "No token provided" });
+
+        const token = authHeader.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.userId = decoded.id;
+        next();
+    } catch (error) {
+        res.status(401).json({ message: "Invalid or expired token" });
     }
 };

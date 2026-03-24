@@ -1,20 +1,21 @@
-import express from "express"
+import "dotenv/config";
+import express from "express";
+import cors from "cors";
 import { connectDatabase } from "./config/db.js";
 import { route } from "./Route/userRoute.js";
-import cors from "cors"
-
+import { todoRoute } from "./Route/todoRoute.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors())
-
+app.use(cors());
 app.use(express.json());
-connectDatabase()
 
-app.use("/api", route)
+connectDatabase();
 
+app.use("/api", route);
+app.use("/api/todos", todoRoute);
 
 app.listen(port, () => {
-    console.log(`Server Connected In Port ${port}`);
-})
+    console.log(`Server running on port ${port}`);
+});
