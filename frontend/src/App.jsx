@@ -5,6 +5,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
+import Home from "./Home";
 
 function ProtectedRoute({ children }) {
   const { user } = useAuth();
@@ -33,9 +34,38 @@ function AppRoutes() {
         }}
       />
       <Routes>
-        <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
-        <Route path="/signup" element={<GuestRoute><Signup /></GuestRoute>} />
-        <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route
+          index
+          element={
+            <GuestRoute>
+              <Home />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <GuestRoute>
+              <Login />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <GuestRoute>
+              <Signup />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>

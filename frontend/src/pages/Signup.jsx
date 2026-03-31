@@ -16,7 +16,13 @@ function getStrength(password) {
 }
 
 const strengthLabel = ["", "Weak", "Fair", "Good", "Strong"];
-const strengthColor = ["", "bg-red-500", "bg-yellow-500", "bg-blue-500", "bg-green-500"];
+const strengthColor = [
+  "",
+  "bg-red-500",
+  "bg-yellow-500",
+  "bg-blue-500",
+  "bg-green-500",
+];
 
 export default function Signup() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -26,19 +32,27 @@ export default function Signup() {
   const navigate = useNavigate();
 
   const strength = getStrength(form.password);
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       await api.post("/auth/register", form);
-      const loginRes = await api.post("/auth/login", { email: form.email, password: form.password });
+      const loginRes = await api.post("/auth/login", {
+        email: form.email,
+        password: form.password,
+      });
       login(loginRes.data.user, loginRes.data.token);
       toast.success("Account created successfully!");
       navigate("/");
     } catch (err) {
-      toast.error(err.response?.data?.message || err.response?.data?.details || "Signup failed");
+      toast.error(
+        err.response?.data?.message ||
+          err.response?.data?.details ||
+          "Signup failed",
+      );
     } finally {
       setLoading(false);
     }
@@ -55,16 +69,30 @@ export default function Signup() {
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 mb-3">
             <CheckSquare className="w-7 h-7 text-blue-600" />
-            <span className="text-2xl font-bold text-gray-900 dark:text-white">Taskly</span>
+            <span className="text-2xl font-bold text-gray-900 dark:text-white">
+              Taskly
+            </span>
           </div>
-          <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Create an account</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm">Start organizing your tasks today</p>
+          <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
+            Create an account
+          </h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm">
+            Start organizing your tasks today
+          </p>
         </div>
 
         <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-8">
+          <Link
+            to={"/"}
+            className="inline-flex items-center gap-2 mb-6 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition"
+          >
+            ← Back
+          </Link>
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Full Name</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                Full Name
+              </label>
               <input
                 type="text"
                 name="name"
@@ -77,7 +105,9 @@ export default function Signup() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Email</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                Email
+              </label>
               <input
                 type="email"
                 name="email"
@@ -90,7 +120,9 @@ export default function Signup() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Password</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                Password
+              </label>
               <div className="relative">
                 <input
                   type={showPass ? "text" : "password"}
@@ -106,7 +138,11 @@ export default function Signup() {
                   onClick={() => setShowPass(!showPass)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition"
                 >
-                  {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPass ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
                 </button>
               </div>
 
@@ -117,12 +153,16 @@ export default function Signup() {
                       <div
                         key={i}
                         className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-                          i <= strength ? strengthColor[strength] : "bg-gray-200 dark:bg-gray-700"
+                          i <= strength
+                            ? strengthColor[strength]
+                            : "bg-gray-200 dark:bg-gray-700"
                         }`}
                       />
                     ))}
                   </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{strengthLabel[strength]}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    {strengthLabel[strength]}
+                  </p>
                 </div>
               )}
             </div>
@@ -140,7 +180,10 @@ export default function Signup() {
 
           <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
             Already have an account?{" "}
-            <Link to="/login" className="text-blue-600 hover:text-blue-700 font-medium transition">
+            <Link
+              to="/login"
+              className="text-blue-600 hover:text-blue-700 font-medium transition"
+            >
               Sign in
             </Link>
           </p>
